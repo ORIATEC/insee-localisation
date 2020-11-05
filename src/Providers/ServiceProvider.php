@@ -1,6 +1,6 @@
 <?php
 
-namespace Package\Providers;
+namespace ORIATEC\InseeLocalisation\Providers;
 
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
@@ -16,7 +16,7 @@ class ServiceProvider extends BaseServiceProvider
      */
     public function boot()
     {
-        //$this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         //$this->loadRoutesFrom(__DIR__.'/../../routes/routes.php');
         //$this->loadViewsFrom(__DIR__.'/../views', 'packagename');
         /*$this->publishes([

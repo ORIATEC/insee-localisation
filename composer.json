@@ -1,8 +1,8 @@
 {
-    "name": "oriatec/laravel-package-boilerplate",
-    "description": "Starting boilerplate for Laravel packages. Override the content in here when creating your own package",
+    "name": "oriatec/insee-localisation",
+    "description": "Package to import and use Insee Localisation Data",
     "type": "library",
-    "keywords": ["laravel"],
+    "keywords": ["laravel", "insee", "localisation"],
     "require": {},
     "require-dev": {},
     "license": "proprietary",
@@ -12,13 +12,13 @@
             "email": "contact@oriatec.fr"
         },
         {
-            "name": "NAME",
-            "email": "EMAIL"
+            "name": "Thibaud DELOBELLE TOUSSAINT",
+            "email": "thibaud.delobelle@oriatec.fr"
         }
     ],
     "autoload": {
         "psr-4": {
-            "Package\\": "src/"
+            "ORIATEC\\InseeLocalisation": "src/"
         }
     },
     "config": {
@@ -29,7 +29,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Package\\Providers\\ServiceProvider"
+                "ORIATEC\\InseeLocalisation\\Providers\\ServiceProvider"
             ]
         }
     }
