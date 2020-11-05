@@ -2,7 +2,9 @@
 
 namespace ORIATEC\InseeLocalisation\Providers;
 
+use Illuminate\Console\Application as Artisan;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
+use ORIATEC\InseeLocalisation\Console\Commands\ImportInseeLocalisation;
 
 /**
  * Service provider
@@ -22,6 +24,14 @@ class ServiceProvider extends BaseServiceProvider
         /*$this->publishes([
             __DIR__.'/../views', resource_path('views/vendor/packagename')
         ]);*/
+
+        $this->app->singleton('oriatec.commands.insee-import', function () {
+            return new ImportInseeLocalisation();
+        });
+
+        Artisan::starting(function ($artisan) {
+            $artisan->resolveCommands(['oriatec.commands.insee-import']);
+        });
     }
 
     /**

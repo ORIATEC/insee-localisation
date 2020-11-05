@@ -1,15 +1,15 @@
 <?php
 
 
-namespace ORIATEC\InseeLocalisation\Database\Factories;
+namespace ORIATEC\InseeLocalisation;
 
 
-use App\Models\Insee\Localisation;
-use App\Models\Insee\LocalisationCity;
+use ORIATEC\InseeLocalisation\Models\Localisation;
+use ORIATEC\InseeLocalisation\Models\LocalisationCity;
 
 class AddressGenerator
 {
-    static function random($city_code=false) : LocalisationCity{
+    static function random() : LocalisationCity{
         $data = Localisation::query()->inRandomOrder()->first();
 
         return new LocalisationCity($data);
