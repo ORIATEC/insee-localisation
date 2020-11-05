@@ -1,0 +1,36 @@
+{
+    "name": "oriatec/laravel-package-boilerplate",
+    "description": "Starting boilerplate for Laravel packages. Override the content in here when creating your own package",
+    "type": "library",
+    "keywords": ["laravel"],
+    "require": {},
+    "require-dev": {},
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "ORIATEC",
+            "email": "contact@oriatec.fr"
+        },
+        {
+            "name": "NAME",
+            "email": "EMAIL"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Package\\": "src/"
+        }
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "optimize-autoloader": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Package\\Providers\\ServiceProvider"
+            ]
+        }
+    }
+}
