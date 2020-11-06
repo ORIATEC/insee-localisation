@@ -4,10 +4,20 @@
 namespace ORIATEC\InseeLocalisation\Models;
 
 
+/**
+ * Class LocalisationRegion
+ * @package ORIATEC\InseeLocalisation\Models
+ */
 class LocalisationRegion
 {
 
+    /**
+     * @var
+     */
     public $code;
+    /**
+     * @var
+     */
     public $name;
 
     function __construct($data){

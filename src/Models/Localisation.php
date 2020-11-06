@@ -22,23 +22,6 @@ use Illuminate\Support\Collection;
  * @property string $region_name
  * @property string|null $lat
  * @property string|null $lng
- * @method static \Illuminate\Database\Eloquent\Builder|Localisation newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Localisation newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Localisation query()
- * @method static \Illuminate\Database\Eloquent\Builder|Localisation whereCityLocalityNameNormalize($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Localisation whereCityName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Localisation whereCityNameNormalize($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Localisation whereCityNameUppercase($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Localisation whereCityZipcode($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Localisation whereDepartmentCode($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Localisation whereDepartmentName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Localisation whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Localisation whereInseeCityCode($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Localisation whereLat($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Localisation whereLng($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Localisation whereRegionCode($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Localisation whereRegionName($value)
- * @mixin \Eloquent
  */
 class Localisation extends Model
 {
@@ -57,76 +40,164 @@ class Localisation extends Model
         'lat', 'lng'
     ];
 
+    /**
+     * @return LocalisationCity
+     */
+    static function randomCity(): LocalisationCity{
+        return Localisation::cities()->random();
+    }
+
+    /**
+     * @return LocalisationDepartment
+     */
+    static function randomDepartment(): LocalisationDepartment{
+        return Localisation::departments()->random();
+    }
+
+    /**
+     * @return LocalisationRegion
+     */
+    static function randomRegion(): LocalisationRegion{
+        return Localisation::regions()->random();
+    }
+
+    /**
+     * @param $zipcode
+     * @param $department_code
+     * @return bool
+     */
     static function cityIsInDepartment($zipcode, $department_code) : bool{
         return Localisation::where('city_zipcode', '=', $zipcode)->where('department_code', '=', $department_code)->count() > 0;
     }
 
+    /**
+     * @param $zipcode
+     * @param $region_code
+     * @return bool
+     */
     static function cityIsInRegion($zipcode, $region_code) : bool{
         return Localisation::where('city_zipcode', '=', $zipcode)->where('region_code', '=', $region_code)->count() > 0;
     }
 
+    /**
+     * @param $department_code
+     * @param $region_code
+     * @return bool
+     */
     static function departmentIsInRegion($department_code, $region_code) : bool{
         return Localisation::where('department_code', '=', $department_code)->where('region_code', '=', $region_code)->count() > 0;
     }
 
-    static function cities($zipcode) : Collection{
+    /**
+     * @param $zipcode
+     * @return Collection
+     */
+    static function city($zipcode) : Collection{
         return Localisation::where('city_zipcode', '=', $zipcode)->get()->map(function($data){
             return new LocalisationCity($data);
         });
     }
 
+    /**
+     * @param $zipcode
+     * @return Collection
+     */
+    static function cities() : Collection{
+        return Localisation::all()->map(function($data){
+            return new LocalisationCity($data);
+        });
+    }
+
+    /**
+     * @param $region_code
+     * @return Collection
+     */
     static function citiesInRegion($region_code) : Collection{
         return Localisation::where('region_code', '=', $region_code)->get()->map(function($data){
             return new LocalisationCity($data);
         });
     }
 
+    /**
+     * @param $department_code
+     * @return Collection
+     */
     static function citiesInDepartment($department_code) : Collection{
         return Localisation::where('department_code', '=', $department_code)->get()->map(function($data){
             return new LocalisationCity($data);
         });
     }
 
+    /**
+     * @param $zipcode
+     * @return LocalisationDepartment
+     */
     static function departmentForCity($zipcode) : LocalisationDepartment{
         $data =  Localisation::query()->select(['department_code', 'department_name'])->where('city_zipcode', '=', $zipcode)->firstOrFail();
         return new LocalisationDepartment($data);
     }
 
+    /**
+     * @param $department_code
+     * @return LocalisationDepartment
+     */
     static function department($department_code) : LocalisationDepartment{
         $data = Localisation::query()->select(['department_code', 'department_name'])->where('department_code', '=', $department_code)->firstOrFail();
         return new LocalisationDepartment($data);
     }
 
+    /**
+     * @return Collection
+     */
     static function departments() : Collection{
         return Localisation::query()->selectRaw('department_code, department_name, region_code, region_name')->distinct('department_code')->get()->map(function($data){
             return new LocalisationDepartment($data);
         });
     }
 
+    /**
+     * @param $region_code
+     * @return Collection
+     */
     static function departmentsInRegion($region_code) : Collection{
         return Localisation::query()->selectRaw('department_code, department_name, region_code, region_name')->where('region_code', '=', $region_code)->distinct('department_code')->get()->map(function($data){
             return new LocalisationDepartment($data);
         });
     }
 
+    /**
+     * @param $region_code
+     * @return LocalisationRegion
+     */
     static function region($region_code) : LocalisationRegion{
         $data =  Localisation::query()->select(['region_code', 'region_name'])->where('region_code', '=', $region_code)->firstOrFail();
 
         return new LocalisationRegion($data);
     }
 
+    /**
+     * @param $department_code
+     * @return LocalisationRegion
+     */
     static function regionForDepartment($department_code) : LocalisationRegion{
         $data = Localisation::query()->select(['region_code', 'region_name'])->where('department_code', '=', $department_code)->firstOrFail();
 
         return new LocalisationRegion($data);
     }
 
+    /**
+     * @param $zipcode
+     * @return LocalisationRegion
+     */
     static function regionForCity($zipcode) : LocalisationRegion{
         $data = Localisation::query()->select(['region_code', 'region_name'])->where('city_zipcode', '=', $zipcode)->firstOrFail();
 
         return new LocalisationRegion($data);
     }
 
+    /**
+     * @return Collection
+     */
     static function regions() : Collection{
         return Localisation::query()->select(['region_code', 'region_name'])->groupBy('region_code', 'region_name')->get()->map(function($data){
             return new LocalisationRegion($data);

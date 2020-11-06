@@ -1,92 +1,95 @@
-# laravel-package-boilerplate
+# Laravel Insee Localisation
 
-Boilerplate for Laravel packages. Use it as a starting point for your own Laravel packages.
+This package provide an implementation of Insee French Localisation Data with a import command
 
-## Start
-Clone this package and remove .git folder
+## Installation
 
-##Steps :
-- Update composer.json
-    * Change package name
-    * Change description
-    * Change keywords
-    * Change authors
-    * Change Namespace name in autoload.psr-4, extra.laravel.providers
-- Create repository local ```git init```
-- Create repository on Github
-- Add remote to local repository ```git remote add origin URL_REPOSITORY```
-- Develop
-- Push
-- Tag the release (vMajeur.mineur.hotfix)
-- Push the tag release
+Add the ORIATEC private packagist repositories
 
-## use the package :
-
-- Via Github
-
-### Without SSH Keys :
-
-Add this in the composer.json of the project: 
-```
-"repositories": [
-        {
-            "type": "vcs",
-            "url": "HTTPS_URL_OF_GITHUB_REPOSITORY"
-        }
-    ]
+```bash
+composer config repositories.private-packagist composer https://repo.packagist.com/oriatec/
 ```
 
-Create a `auth.json` file in the root directory of the projet :
-```
-{
-    "github-oauth": {
-        "github.com": "your-github-token"
-    }
-}
+Install the package
+
+```bash
+composer require oriatec/laravel-insee-localisation
 ```
 
-Require the package
+Run migrations
+
+```bash
+php artisan migrate
 ```
-composer require oriatec/PACKAGE_NAME
+## Usage
+
+### Import Insee Data
+
+To import Insee Data, run
+
+```bash
+php artisan insee:import
 ```
 
-### With SSH Keys :
+### Use the data in your application
 
-Add this in the composer.json of the project: 
-```
-"repositories": [
-        {
-            "type": "vcs",
-            "url": "SSH_URL_OF_GITHUB_REPOSITORY"
-        }
-    ]
+#### Model LocalisationCity
+
+Represent a city with all informations, the department and region.
+
+#### Model LocalisationDepartment
+
+Represent a department with all informations and region
+
+#### Model LocalisationRegion
+
+Represent a region
+
+#### Eloquent Model Localisation
+
+Is the Eloquent Model use to request the database. 
+
+It provides static method to generate LocalisationCity, LocalisationDepartment or LocalisationRegion
+
+```php
+use ORIATEC\InseeLocalisation\Models\Localisation;
+
+// Random Localisation
+$city = Localisation::randomCity();
+$department = Localisation::randomDepartment();
+$region = Localisation::randomRegion();
+
+// Localisation Check
+Localisation::cityIsInDepartment($zipcode, $department_code);
+Localisation::cityIsInRegion($zipcode, $region_code);
+Localisation::departmentIsInRegion($department_code, $region_code);
+
+// City 
+$cities = Localisation::cities();
+$cities = Localisation::citiesInDepartment($department_code);
+$cities = Localisation::citiesInRegion($region_code);
+
+$city = Localisation::city($zipcode);
+
+// Department
+$departments = Localisation::departments();
+$departments = Localisation::departmentsInRegion($region_code);
+$department = Localisation::department($department_code);
+$department = Localisation::departmentForCity($zipcode);
+
+// Region
+
+$regions = Localisation::regions();
+$region = Localisation::region();
+$region = Localisation::regionForDepartment($department_code);
+$region = Localisation::regionForCity($zipcode);
 ```
 
-Require the package
-```
-composer require oriatec/PACKAGE_NAME
-```
 
-- Via local folder
+## Changelog
 
-Add this in the composer.json of the project: 
-```
-"repositories": [
-        {
-            "type": "vcs",
-            "url": "/full/path/to/the/local/package/package-name"
-        }
-    ]
-```
+Please see [changelog.md](changelog.md) for what has changed recently.
 
-Require the package
-```
-composer require oriatec/PACKAGE_NAME
-```
+## License
 
-For development purpose, allow composer to use symlink by adding this on the composer.json:
-```
-"options": {
-           "symlink": true
-         }
-```
+This package belongs to [ORIATEC SARL](https://oriatec.fr). You must have an authorization to use it.
