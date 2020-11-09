@@ -44,21 +44,24 @@ class Localisation extends Model
      * @return LocalisationCity
      */
     static function randomCity(): LocalisationCity{
-        return Localisation::cities()->random();
+        $data = Localisation::inRandomOrder()->firstOrFail();
+        return new LocalisationCity($data);
     }
 
     /**
      * @return LocalisationDepartment
      */
     static function randomDepartment(): LocalisationDepartment{
-        return Localisation::departments()->random();
+        $data = Localisation::query()->selectRaw('department_code, department_name, region_code, region_name')->distinct('department_code')->inRandomOrder()->firstOrFail();
+        return new LocalisationDepartment($data);
     }
 
     /**
      * @return LocalisationRegion
      */
     static function randomRegion(): LocalisationRegion{
-        return Localisation::regions()->random();
+        $data = Localisation::query()->select(['region_code', 'region_name'])->groupBy('region_code', 'region_name')->inRandomOrder()->firstOrFail();
+        return new LocalisationRegion($data);
     }
 
     /**
@@ -92,10 +95,9 @@ class Localisation extends Model
      * @param $zipcode
      * @return Collection
      */
-    static function city($zipcode) : Collection{
-        return Localisation::where('city_zipcode', '=', $zipcode)->get()->map(function($data){
-            return new LocalisationCity($data);
-        });
+    static function city($zipcode) : LocalisationCity{
+        $data = Localisation::where('city_zipcode', '=', $zipcode)->firstOrFail();
+        return new LocalisationCity($data);
     }
 
     /**
